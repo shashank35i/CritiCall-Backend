@@ -1,0 +1,7 @@
+/.env
+/.idea
+/node_modules
+/vendor
+/uploads
+/jitsi
+/tools
