@@ -5,6 +5,7 @@
     <img src="https://img.shields.io/badge/Backend-PHP-4f5b93" alt="Backend" />
     <img src="https://img.shields.io/badge/Database-MySQL-0b74de" alt="Database" />
     <img src="https://img.shields.io/badge/Email-OTP-2d2d2d" alt="Email" />
+    <img src="https://img.shields.io/badge/Payments-Razorpay-2d2d2d" alt="Payments" />
     <img src="https://img.shields.io/badge/Status-Production%20Ready-0aa06e" alt="Status" />
   </p>
   <p><strong>Built by Shashank Preetham Pendyala</strong></p>
@@ -27,9 +28,13 @@ CritiCall Backend powers authentication, appointments, prescriptions, inventory,
 - [Local Development](#local-development)
 - [Environment Variables](#environment-variables)
 - [API Modules](#api-modules)
-- [Workflow](#workflow)
+- [API Examples](#api-examples)
+- [Workflow Diagrams](#workflow-diagrams)
+- [Deployment Guide](#deployment-guide)
+- [Monitoring and Logging](#monitoring-and-logging)
 - [Security Notes](#security-notes)
 - [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
 - [License](#license)
 
 ---
@@ -127,6 +132,7 @@ Configure in `api/config.php` and mailer config:
 - `MAIL_USER`
 - `MAIL_PASS`
 - `JITSI_BASE_URL` (if used)
+- `RAZORPAY_KEY_SECRET` (server-side)
 
 ---
 
@@ -142,11 +148,80 @@ Configure in `api/config.php` and mailer config:
 
 ---
 
-## Workflow
+## API Examples
 
-1. User action triggers a role API endpoint.
-2. Backend updates DB and triggers notifications.
-3. Email OTP flows use templates and mailer configuration.
+**Login**
+
+```http
+POST /auth/login
+```
+
+**Book appointment**
+
+```http
+POST /patient/book_appointment
+```
+
+**Doctor completes appointment**
+
+```http
+POST /doctor/appointment_complete
+```
+
+**Pharmacist marks available**
+
+```http
+POST /pharmacist/requests_mark_available
+```
+
+---
+
+## Workflow Diagrams
+
+### Appointment Lifecycle
+
+```mermaid
+sequenceDiagram
+  participant P as Patient
+  participant API as Backend API
+  participant DB as MySQL
+
+  P->>API: Book appointment
+  API->>DB: Insert appointment
+  API-->>P: Appointment confirmed
+```
+
+### Prescription Flow
+
+```mermaid
+sequenceDiagram
+  participant D as Doctor
+  participant API as Backend API
+  participant DB as MySQL
+  participant P as Patient
+
+  D->>API: Create prescription
+  API->>DB: Save prescription
+  API-->>P: Prescription available
+```
+
+---
+
+## Deployment Guide
+
+- Install dependencies with Composer
+- Configure DB and SMTP in `api/config.php`
+- Set up HTTPS (nginx or Apache)
+- Ensure `uploads/` is writable if enabled
+- Schedule `api/cron/appointment_reminders.php`
+
+---
+
+## Monitoring and Logging
+
+- PHP error logs for backend failures
+- Web server logs for request tracing
+- Cron logs for reminder job outcomes
 
 ---
 
@@ -155,6 +230,7 @@ Configure in `api/config.php` and mailer config:
 - Keep DB and SMTP credentials out of source control.
 - Enforce role checks on all endpoints.
 - Validate uploads and restrict file size.
+- Keep Razorpay secret server-side.
 
 ---
 
@@ -163,6 +239,18 @@ Configure in `api/config.php` and mailer config:
 - **500 errors**: verify DB credentials in `api/config.php`.
 - **OTP emails not sending**: check SMTP settings in `api/mailer.php`.
 - **Health check fails**: confirm PHP server root points to `api/`.
+
+---
+
+## FAQ
+
+**Is Jitsi required?**
+
+No. The API can return external meeting links and Jitsi is optional.
+
+**Do you store payment secrets in the app?**
+
+No. Payment secrets are handled server-side.
 
 ---
 
