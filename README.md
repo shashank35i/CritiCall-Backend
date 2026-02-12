@@ -7,6 +7,7 @@
     <img src="https://img.shields.io/badge/Email-OTP-2d2d2d" alt="Email" />
     <img src="https://img.shields.io/badge/Payments-Razorpay-2d2d2d" alt="Payments" />
     <img src="https://img.shields.io/badge/Status-Production%20Ready-0aa06e" alt="Status" />
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-1F6FEB" alt="License" /></a>
   </p>
   <p><strong>Built by Shashank Preetham Pendyala</strong></p>
 </div>
@@ -256,4 +257,4 @@ No. Payment secrets are handled server-side.
 
 ## License
 
-MIT License. See `LICENSE`.
+MIT License. See [LICENSE](LICENSE).
